@@ -43,4 +43,9 @@ paper_btn = tk.Button(button_frame, text="Paper", command=lambda: play("paper"))
 paper_btn.pack(side="left", padx=10)
 
 scissors_btn = tk.Button(button_frame, text="Scissors", command=lambda: play("scissors"))
-scis
+scissors_btn.pack(side="left", padx=10)
+
+score_label = tk.Label(window, text="Score → You: 0  Computer: 0", font=("Arial", 12))
+score_label.pack(pady=15)
+
+window.mainloop()
