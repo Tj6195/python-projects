@@ -7,15 +7,18 @@ emojis = {"rock": "🪨", "paper": "📄", "scissors": "✂️"}
 player_score = 0
 computer_score = 0
 
-# ---------- COLOR PALETTE (muted, aesthetic) ----------
-WIN_COLOR = "#7C9885"      # muted sage green
-LOSE_COLOR = "#C97B63"     # muted terracotta
-TIE_COLOR = "#B69A6B"      # muted gold
-BTN_COLOR = "#5C6B73"      # slate blue-gray
-BTN_HOVER = "#455158"      # darker slate on hover
+# ---------- COLOR PALETTE (earthy jewel tones) ----------
+BG_COLOR = "#1F2A24"        # deep forest green background
+CARD_COLOR = "#2C3B32"      # slightly lighter forest for contrast panels
+TEXT_COLOR = "#EDE6D6"      # warm cream text (readable on dark bg)
+WIN_COLOR = "#4E9E6F"       # emerald
+LOSE_COLOR = "#8C2F39"      # burgundy
+TIE_COLOR = "#C99A3E"       # amber/gold
+BTN_COLOR = "#3D5A45"       # forest green button
+BTN_HOVER = "#4E9E6F"       # emerald on hover
 
-ctk.set_appearance_mode("light")       # starting theme
-ctk.set_default_color_theme("blue")    # base theme, we override colors manually
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("green")
 
 def play(player_choice):
     global player_score, computer_score
@@ -39,43 +42,39 @@ def play(player_choice):
     result_label.configure(text=result)
     score_label.configure(text=f"You: {player_score}      Computer: {computer_score}")
 
-def toggle_theme():
-    current = ctk.get_appearance_mode()
-    ctk.set_appearance_mode("dark" if current == "Light" else "light")
-
 # ---------- UI SETUP ----------
 window = ctk.CTk()
 window.title("Rock Paper Scissors")
-window.geometry("420x300")
+window.geometry("440x320")
+window.configure(fg_color=BG_COLOR)
 
-title_label = ctk.CTkLabel(window, text="Rock · Paper · Scissors",
-                            font=("Georgia", 18, "bold"))
-title_label.pack(pady=(20, 5))
+card = ctk.CTkFrame(window, fg_color=CARD_COLOR, corner_radius=20)
+card.pack(padx=25, pady=25, fill="both", expand=True)
 
-result_label = ctk.CTkLabel(window, text="Make your move!", font=("Georgia", 13),
-                             wraplength=380)
-result_label.pack(pady=10)
+title_label = ctk.CTkLabel(card, text="Rock · Paper · Scissors",
+                            font=("Georgia", 19, "bold"), text_color="#C99A3E")
+title_label.pack(pady=(25, 8))
 
-button_frame = ctk.CTkFrame(window, fg_color="transparent")
-button_frame.pack(pady=10)
+result_label = ctk.CTkLabel(card, text="Make your move!", font=("Georgia", 13),
+                             text_color=TEXT_COLOR, wraplength=360)
+result_label.pack(pady=8)
+
+button_frame = ctk.CTkFrame(card, fg_color="transparent")
+button_frame.pack(pady=12)
 
 for choice in choices:
     btn = ctk.CTkButton(
         button_frame, text=f"{emojis[choice]}  {choice.capitalize()}",
         command=lambda c=choice: play(c),
         fg_color=BTN_COLOR, hover_color=BTN_HOVER,
-        font=("Georgia", 12), corner_radius=12,
-        width=110, height=40
+        text_color=TEXT_COLOR, font=("Georgia", 12, "bold"),
+        corner_radius=14, width=115, height=42, border_width=1,
+        border_color="#4E9E6F"
     )
     btn.pack(side="left", padx=8)
 
-score_label = ctk.CTkLabel(window, text="You: 0      Computer: 0",
-                            font=("Georgia", 13, "bold"))
-score_label.pack(pady=20)
-
-theme_btn = ctk.CTkButton(window, text="🌓 Toggle Theme", command=toggle_theme,
-                           fg_color="transparent", border_width=1,
-                           text_color=("gray20", "gray90"), width=140, height=28)
-theme_btn.pack(pady=5)
+score_label = ctk.CTkLabel(card, text="You: 0      Computer: 0",
+                            font=("Georgia", 14, "bold"), text_color=TEXT_COLOR)
+score_label.pack(pady=(15, 20))
 
 window.mainloop()
