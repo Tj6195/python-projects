@@ -1,4 +1,4 @@
-import tkinter as tk
+import customtkinter as ctk
 import random
 
 # ---------- GAME LOGIC ----------
@@ -8,13 +8,14 @@ player_score = 0
 computer_score = 0
 
 # ---------- COLOR PALETTE (muted, aesthetic) ----------
-BG_COLOR = "#F4F1EA"       # warm cream background
-TEXT_COLOR = "#3B3A36"     # soft charcoal
 WIN_COLOR = "#7C9885"      # muted sage green
 LOSE_COLOR = "#C97B63"     # muted terracotta
 TIE_COLOR = "#B69A6B"      # muted gold
 BTN_COLOR = "#5C6B73"      # slate blue-gray
 BTN_HOVER = "#455158"      # darker slate on hover
+
+ctk.set_appearance_mode("light")       # starting theme
+ctk.set_default_color_theme("blue")    # base theme, we override colors manually
 
 def play(player_choice):
     global player_score, computer_score
@@ -23,57 +24,58 @@ def play(player_choice):
 
     if player_choice == computer:
         result = f"{p_emoji} Both chose {player_choice}. It's a tie! {c_emoji}"
-        result_label.config(fg=TIE_COLOR)
+        result_label.configure(text_color=TIE_COLOR)
     elif (player_choice == "rock" and computer == "scissors") or \
          (player_choice == "paper" and computer == "rock") or \
          (player_choice == "scissors" and computer == "paper"):
         result = f"{p_emoji} You win! {player_choice} beats {computer} {c_emoji}"
-        result_label.config(fg=WIN_COLOR)
+        result_label.configure(text_color=WIN_COLOR)
         player_score += 1
     else:
         result = f"{c_emoji} Computer wins! {computer} beats {player_choice} {p_emoji}"
-        result_label.config(fg=LOSE_COLOR)
+        result_label.configure(text_color=LOSE_COLOR)
         computer_score += 1
 
-    result_label.config(text=result)
-    score_label.config(text=f"You: {player_score}      Computer: {computer_score}")
+    result_label.configure(text=result)
+    score_label.configure(text=f"You: {player_score}      Computer: {computer_score}")
 
-def on_enter(e):
-    e.widget.config(bg=BTN_HOVER)
-
-def on_leave(e):
-    e.widget.config(bg=BTN_COLOR)
+def toggle_theme():
+    current = ctk.get_appearance_mode()
+    ctk.set_appearance_mode("dark" if current == "Light" else "light")
 
 # ---------- UI SETUP ----------
-window = tk.Tk()
+window = ctk.CTk()
 window.title("Rock Paper Scissors")
-window.geometry("420x260")
-window.configure(bg=BG_COLOR)
+window.geometry("420x300")
 
-title_label = tk.Label(window, text="Rock · Paper · Scissors",
-                        font=("Georgia", 16, "bold"), bg=BG_COLOR, fg=TEXT_COLOR)
+title_label = ctk.CTkLabel(window, text="Rock · Paper · Scissors",
+                            font=("Georgia", 18, "bold"))
 title_label.pack(pady=(20, 5))
 
-result_label = tk.Label(window, text="Make your move!", font=("Georgia", 12),
-                         bg=BG_COLOR, fg=TEXT_COLOR, wraplength=380)
+result_label = ctk.CTkLabel(window, text="Make your move!", font=("Georgia", 13),
+                             wraplength=380)
 result_label.pack(pady=10)
 
-button_frame = tk.Frame(window, bg=BG_COLOR)
+button_frame = ctk.CTkFrame(window, fg_color="transparent")
 button_frame.pack(pady=10)
 
 for choice in choices:
-    btn = tk.Button(
+    btn = ctk.CTkButton(
         button_frame, text=f"{emojis[choice]}  {choice.capitalize()}",
         command=lambda c=choice: play(c),
-        bg=BTN_COLOR, fg="white", font=("Georgia", 11),
-        relief="flat", padx=12, pady=8, cursor="hand2"
+        fg_color=BTN_COLOR, hover_color=BTN_HOVER,
+        font=("Georgia", 12), corner_radius=12,
+        width=110, height=40
     )
     btn.pack(side="left", padx=8)
-    btn.bind("<Enter>", on_enter)
-    btn.bind("<Leave>", on_leave)
 
-score_label = tk.Label(window, text="You: 0      Computer: 0",
-                        font=("Georgia", 12, "bold"), bg=BG_COLOR, fg=TEXT_COLOR)
+score_label = ctk.CTkLabel(window, text="You: 0      Computer: 0",
+                            font=("Georgia", 13, "bold"))
 score_label.pack(pady=20)
+
+theme_btn = ctk.CTkButton(window, text="🌓 Toggle Theme", command=toggle_theme,
+                           fg_color="transparent", border_width=1,
+                           text_color=("gray20", "gray90"), width=140, height=28)
+theme_btn.pack(pady=5)
 
 window.mainloop()
