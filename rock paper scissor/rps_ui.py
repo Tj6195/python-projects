@@ -50,6 +50,7 @@ def play(player_choice):
 window = ctk.CTk()
 window.title("Rock Paper Scissors")
 window.geometry("440x340")
+window.resizable(False, False)
 window.configure(fg_color=BG_COLOR)
 
 card = ctk.CTkFrame(window, fg_color=CARD_COLOR, corner_radius=20)
